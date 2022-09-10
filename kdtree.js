@@ -224,6 +224,18 @@ function range_query_circle(node, center, radio, queue, depth=0) {
     }
 }
 
+function range_query_rec(node, lefttop, rightbottom, queue, depth=0) {
+   if(node != null)
+   {
+       var dentro = node.point[0]>=lefttop[0] && node.point[0]<=rightbottom[0] && node.point[1]<=lefttop[1] && node.point[1]>=rightbottom[1];
+       if (dentro) {
+           queue.push(node.point);
+       }
+       range_query_rec(node.left, center, radio, queue, depth+1);
+       range_query_rec(node.right, center, radio, queue, depth+1);
+   }
+}
+
 function searchKNN(node, point, k) {
    
    var listNodeKNN = [];

@@ -34,7 +34,6 @@ function dibujarIzquierda(node) {
    }
 };
 
-
 function dibujarDerecha(node) {
 
    if (node.right == null) {
@@ -223,4 +222,62 @@ function range_query_circle(node, center, radio, queue, depth=0) {
         range_query_circle(node.left, center, radio, queue, depth+1);
         range_query_circle(node.right, center, radio, queue, depth+1);
     }
+}
+
+function searchKNN(node, point, k) {
+   
+   var listNodeKNN = [];
+   var root = build_kdtree (node);
+   var leafNode = searchLeaf(root, point);
+   var nodeKNN = new Node();
+   while (leafNode != root) {
+      
+      if (distanceSquared(point, leafNode.point) > distanceSquared(point, leafNode.parent.point)) {
+            nodeKNN = leafNode.parent.point;
+            nodeKNN.distance = distanceSquared(point, leafNode.parent.point);
+      } else {
+            nodeKNN = leafNode.point;
+            nodeKNN.distance = distanceSquared(point, leafNode.point);
+      }
+
+      if (!listNodeKNN.includes(nodeKNN)) {
+         listNodeKNN.push(nodeKNN);   
+      }
+      leafNode = leafNode.parent;
+   }
+   return listNodeKNN.sort((a,b) => { return a.distance - b.distance }).slice(0, k);
+}
+
+function searchLeaf(node, point) {
+   var leaf = node;
+   var next = null;
+   var index = 0;
+
+   while (leaf.left != null || leaf.right != null) {
+      if (point[index] < leaf.point[index]) {
+         next =  leaf.left;
+         next.parent = leaf;
+      } else if (point[index] > leaf.point[index]) {
+            next =  leaf.right;
+            next.parent = leaf;
+         } else {
+            if (distanceSquared(point, leaf.left) < distanceSquared(point, leaf.right)) {
+               next = leaf.left;
+               next.parent = leaf;
+            } else {
+               next = leaf.right;
+               next.parent = leaf;
+            }
+         }
+      if (next == null) {
+         break;
+      } else {
+         leaf = next;
+         if (++index >= node.point.length) {
+            index = 0;
+         }
+      } 
+   }
+   leaf = next;
+   return leaf;
 }

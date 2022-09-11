@@ -67,8 +67,17 @@ function setup() {
       [110 , 100] ,
       [140 ,110] ,
       [160 , 100] ,
-      [150 , 30]
+      [150 , 30] ,
+      [150 , 20] ,
+      [160 , 10] ,
+      [140 , 61] ,
+      [140 , 62] ,
+      [140 , 63] ,
+      [140 , 64] ,
+      [140 , 65] ,
+      [140 , 66] 
    ];
+
    var point = [140 ,90]; // query
    for ( let i = 0; i < data.length; i ++) {
       fill (255 , 255 , 255) ;
@@ -90,4 +99,13 @@ function setup() {
    best = null;
    best = closest_point(root, point, 0);
    console.log("Best closest: " + best);
+
+   //PUNTO 08 subsección 2
+   //Comentar para que no descargue el archivo dot
+   //let dot = generate_dot(root);
+   //console.log(dot);
+
+   //PUNTO 08
+   let nodeKNN = searchKNN(data, point, 3)
+   console.log(nodeKNN);
 }

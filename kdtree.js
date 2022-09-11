@@ -19,7 +19,54 @@ function getHeight (node) {
     return 1 + Math.max(getHeight(node.left), getHeight(node.right));
 }
 
-function generate_dot (node) {}
+function dibujarIzquierda(node) {
+
+   if (node.left == null) {
+      return "";
+   } else {
+       let texto = "";
+       if (node.left != null && node.right) {
+           texto = node.point[0] +", "+ node.point[1] + "-> " + node.left.point[0] +", "+ node.left.point[1] +";\n"
+           texto += dibujarIzquierda(node.left);
+           texto += dibujarDerecha(node.left);
+       }
+      return texto;
+   }
+};
+
+function dibujarDerecha(node) {
+
+   if (node.right == null) {
+      return "";
+   } else {
+       let texto = "";
+       if (node.right != null && node.left) {
+           texto = node.point[0] +", "+ node.point[1] + "-> " + node.right.point[0] +", "+ node.right.point[1] +";\n"
+           texto += dibujarDerecha(node.right);
+           texto += dibujarIzquierda(node.right);
+       }
+      return texto;
+   }
+};
+
+function generate_dot (node) {
+   var texto = "digraph G\n"
+               +"{\n"
+                  if (node.point != null) {
+                     texto += dibujarIzquierda(node);
+                     texto += dibujarDerecha(node);
+                  }
+                  texto += "\n}";
+
+   const doc = document.createElement("a");
+   const archivo = new Blob([texto], { type: 'application/msword' });
+   const url = URL.createObjectURL(archivo);
+   doc.href = url;
+   doc.download = "kd-tree.dot";
+   doc.click();
+   URL.revokeObjectURL(url);
+   return texto;
+}
 
 function build_kdtree (points, depth = 0) {
    var n = points.length;
@@ -175,4 +222,74 @@ function range_query_circle(node, center, radio, queue, depth=0) {
         range_query_circle(node.left, center, radio, queue, depth+1);
         range_query_circle(node.right, center, radio, queue, depth+1);
     }
+}
+
+function range_query_rec(node, lefttop, rightbottom, queue, depth=0) {
+   if(node != null)
+   {
+       var dentro = node.point[0]>=lefttop[0] && node.point[0]<=rightbottom[0] && node.point[1]<=lefttop[1] && node.point[1]>=rightbottom[1];
+       if (dentro) {
+           queue.push(node.point);
+       }
+       range_query_rec(node.left, center, radio, queue, depth+1);
+       range_query_rec(node.right, center, radio, queue, depth+1);
+   }
+}
+
+function searchKNN(node, point, k) {
+   
+   var listNodeKNN = [];
+   var root = build_kdtree (node);
+   var leafNode = searchLeaf(root, point);
+   var nodeKNN = new Node();
+   while (leafNode != root) {
+      
+      if (distanceSquared(point, leafNode.point) > distanceSquared(point, leafNode.parent.point)) {
+            nodeKNN = leafNode.parent.point;
+            nodeKNN.distance = distanceSquared(point, leafNode.parent.point);
+      } else {
+            nodeKNN = leafNode.point;
+            nodeKNN.distance = distanceSquared(point, leafNode.point);
+      }
+
+      if (!listNodeKNN.includes(nodeKNN)) {
+         listNodeKNN.push(nodeKNN);   
+      }
+      leafNode = leafNode.parent;
+   }
+   return listNodeKNN.sort((a,b) => { return a.distance - b.distance }).slice(0, k);
+}
+
+function searchLeaf(node, point) {
+   var leaf = node;
+   var next = null;
+   var index = 0;
+
+   while (leaf.left != null || leaf.right != null) {
+      if (point[index] < leaf.point[index]) {
+         next =  leaf.left;
+         next.parent = leaf;
+      } else if (point[index] > leaf.point[index]) {
+            next =  leaf.right;
+            next.parent = leaf;
+         } else {
+            if (distanceSquared(point, leaf.left) < distanceSquared(point, leaf.right)) {
+               next = leaf.left;
+               next.parent = leaf;
+            } else {
+               next = leaf.right;
+               next.parent = leaf;
+            }
+         }
+      if (next == null) {
+         break;
+      } else {
+         leaf = next;
+         if (++index >= node.point.length) {
+            index = 0;
+         }
+      } 
+   }
+   leaf = next;
+   return leaf;
 }

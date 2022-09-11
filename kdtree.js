@@ -89,9 +89,9 @@ function naive_closest_point (node, point, depth = 0, best = null ) {
    console.log(depth + ": ");
    if (best != null) {
       dis2 = distanceSquared(best, point);
+      console.log(best + ": " + dis2);
       best = (dis1 < dis2)? node.point : best;
       console.log(node.point + ": " + dis1);
-      console.log(best + ": " + dis2);
       console.log(best + ": " + ((dis1 < dis2)? dis1 : dis2));
    } else {
       best = node.point;

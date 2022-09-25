@@ -310,7 +310,7 @@ function construccionKdTree() {
       let nodeKNN = oKdTree.searchKNN(root, querytfidf, 3)
       console.log(nodeKNN);
       console.log("Consulta: ", query);
-      console.log("Resultado: ", oKdTree.classifierKNN(review, querytfidf));
+      console.log("Resultado: ", oKdTree.classifierKNN(review, querytfidf, 3));
    });
    
 }

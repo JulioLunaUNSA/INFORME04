@@ -333,13 +333,13 @@ class KdTree {
       return node;
    }
 
-   classifierKNN(data, point) {
+   classifierKNN(data, point, k) {
       var root = this.build_kdtree_classifier(data);
-      let listKNN = this.searchKNN(root, point, 3);
+      let listKNN = this.searchKNN(root, point, k);
       listKNN.sort(function(a, b) {
          return a.classifier - b.classifier;
       });
-      console.log(listKNN);
+      //console.log(listKNN);
       var max = 0;
       var count = 0;
       var classCurrent = listKNN[0].classifier;

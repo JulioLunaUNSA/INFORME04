@@ -9,6 +9,7 @@ class Node {
    }
 }
 
+// funcion de altura del punto numero 2 del informe 4
 function getHeight (node) {
    // caso base: el árbol vacío tiene una altura de -1
    if (node == null) {

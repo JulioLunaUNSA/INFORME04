@@ -101,7 +101,6 @@ function setup() {
    console.log("Best closest: " + best);
 
    //PUNTO 08 subsección 2
-   //Comentar para que no descargue el archivo dot
    //let dot = generate_dot(root);
    //console.log(dot);
 

@@ -68,14 +68,14 @@ function setup() {
       [140 ,110] ,
       [160 , 100] ,
       [150 , 30] ,
-      [150 , 20] ,
-      [160 , 10] ,
-      [140 , 61] ,
-      [140 , 62] ,
-      [140 , 63] ,
-      [140 , 64] ,
-      [140 , 65] ,
-      [140 , 66] 
+      //[150 , 20] ,
+      //[160 , 10] ,
+      //[140 , 61] ,
+      //[140 , 62] ,
+      //[140 , 63] ,
+      //[140 , 64] ,
+      //[140 , 65] ,
+      //[140 , 66] 
    ];
 
    var point = [140 ,90]; // query
@@ -85,7 +85,8 @@ function setup() {
       textSize (8) ;
       text (data[i][0] + ',' + data[i][1], data[i][0] + 5, height - data[i][1]);// 200 -y para q se dibuje apropiadamente
    }
-   var root = build_kdtree ( data ) ;
+   var oKdTree = new KdTree(2);
+   var root = oKdTree.build_kdtree ( data ) ;
    console.log ( root );
    
    //var pto1 = closest_point_brute_force(data, point);
@@ -93,11 +94,11 @@ function setup() {
    
    console.log("INICIO - Best naive closest " + point);
    let best = null;
-   best = naive_closest_point(root, point, 0, best);
+   best = oKdTree.naive_closest_point(root, point, 0, best);
    console.log("Best naive closest: " + best);
    console.log("INICIO - Best closest " + point);
    best = null;
-   best = closest_point(root, point, 0);
+   best = oKdTree.closest_point(root, point, 0);
    console.log("Best closest: " + best);
 
    //PUNTO 08 subsección 2
@@ -105,6 +106,7 @@ function setup() {
    //console.log(dot);
 
    //PUNTO 08
-   let nodeKNN = searchKNN(data, point, 3)
+   //let nodeKNN = oKdTree.searchKNN(data, point, 3)
+   let nodeKNN = oKdTree.searchKNN(root, point, 3)
    console.log(nodeKNN);
 }

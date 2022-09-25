@@ -43,7 +43,7 @@ function readFile(input) {
       console.log(reader.error);
    };
 }
-
+//Construccion de Vextores
 function construccionVectores() {
    console.table("review");
    atk = review.map((ele, index)=>{
